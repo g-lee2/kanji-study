@@ -1,18 +1,17 @@
+//import KanjiResult from "../classes/kanjiClass.js";
+
 export default class KanjiService {  
-  static getKanji() {
-    return new Promise(function(resolve, reject) {
-      let request = new XMLHttpRequest();
-      const url = `https://kanjiapi.dev/v1/kanji/`;
-      request.addEventListener("loadend", function() {
-        const response = JSON.parse(this.responseText);
-        if (this.status === 200) {
-          resolve(response);
-        } else {
-          reject([this, response]);
-        }
-      });
-      request.open("GET", url, true);
-      request.send();
-    });
+  static async getKanji(kanjiCharacter) {
+    try {
+      const response = await fetch(`https://kanjiapi.dev/v1/kanji/${kanjiCharacter}`);
+      const jsonifiedResponse = await response.json();
+      if (!response.ok) {
+        const errorMessage = `${response.status} ${response.statusTest} ${jsonifiedResponse.message}`;
+        throw new Error(errorMessage);
+      }
+      return jsonifiedResponse;
+    } catch(error) {
+      return error;
+    }
   }
 }
